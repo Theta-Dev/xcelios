@@ -1,0 +1,12 @@
+openpyxl
+
+# Testing
+pytest
+pytest-cov
+
+# Linting
+flake8
+yapf
+isort
+
+bump2version
