@@ -3,6 +3,7 @@ openpyxl
 # Testing
 pytest
 pytest-cov
+importlib_resources
 
 # Linting
 flake8
