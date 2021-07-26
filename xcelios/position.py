@@ -79,7 +79,20 @@ class Position:
 
         return val
 
+    def _check_in_wb(self, wb: Workbook):
+        if self.ws not in wb.sheetnames:
+            raise InvalidPositionError('Worksheet %s not found' % self.ws)
+
+    def is_in(self, wb: Workbook) -> bool:
+        self._check_in_wb(wb)
+
+        ws = wb[self.ws]
+        return ws.min_row <= self.row <= ws.max_row and \
+            ws.min_column <= self.col <= ws.max_column
+
     def get_cell(self, wb: Workbook) -> Cell:
+        self._check_in_wb(wb)
+
         return wb[self.ws].cell(self.row, self.col)
 
     def shifted(self, direction: Direction, d: int = 1) -> 'Position':
@@ -87,6 +100,10 @@ class Position:
         nrow = self.row + direction.value[1] * d
 
         return Position(self.ws, ncol, nrow)
+
+    def __eq__(self, other):
+        return self.ws == other.ws and self.row == other.row and \
+            self.col == other.col
 
     def __str__(self):
         return '%s!$%s$%d' % (self.ws, get_column_letter(self.col), self.row)
