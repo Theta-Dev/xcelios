@@ -1,7 +1,7 @@
 import re
 from typing import Any, Type
 
-from openpyxl import Workbook
+from openpyxl.worksheet.worksheet import Worksheet
 
 from xcelios.position import Direction, MarkerAbs
 
@@ -18,19 +18,20 @@ class Dataset:
 
 class Table:
     def __init__(self,
-                 wb: Workbook,
+                 ws: Worksheet,
                  initial_marker: MarkerAbs,
                  obj_class: Type,
                  header_dir: Direction = Direction.RIGHT,
-                 body_dir: Direction = Direction.DOWN):
-        self.wb = wb
-        self.initial_pos = initial_marker.get_position(self.wb)
+                 body_dir: Direction = Direction.DOWN,
+                 max_blanks: int = 1):
+        self.ws = ws
+        self.initial_pos = initial_marker.get_position(self.ws)
         self.obj_class = obj_class
         self.header_dir = header_dir
         self.body_dir = body_dir
 
         # Maximum number of blank rows/cols to ignore
-        self.max_blanks = 1
+        self.max_blanks = max_blanks
 
         self.title_positions = dict()
         self.datasets = []
@@ -50,15 +51,15 @@ class Table:
         # Stop iteration after encountering more than max_blanks empty cells
         # after eachother, reaching the end of the worksheet
         # or having found all titles
-        while blanks <= self.max_blanks and pos.is_in(self.wb) and title_rexes:
-            val = str(pos.get_cell(self.wb).value)
+        while blanks <= self.max_blanks and pos.is_in(self.ws) and title_rexes:
+            val = pos.get_cell(self.ws).value
 
             if val:
                 blanks = 0
                 found_key = None
 
                 for key, rex in title_rexes.items():
-                    if rex.match(val):
+                    if rex.match(str(val)):
                         found_key = key
                         break
 
