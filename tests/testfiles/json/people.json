@@ -1,0 +1,138 @@
+[
+  {
+    "first_name": "Hanson",
+    "last_name": "Marnane",
+    "email": "hmarnane0@arizona.edu",
+    "birthday": "1988-06-26T00:00:00",
+    "height": 165,
+    "favorite_food": "Wine"
+  },
+  {
+    "first_name": "Fulvia",
+    "last_name": "Selburn",
+    "email": "fselburn1@squidoo.com",
+    "birthday": "1988-10-06T00:00:00",
+    "height": 185,
+    "favorite_food": "Lamb"
+  },
+  {
+    "first_name": "Napoleon",
+    "last_name": "Bundy",
+    "email": "nbundy2@tinyurl.com",
+    "birthday": "1992-02-17T00:00:00",
+    "height": 151,
+    "favorite_food": "Orange"
+  },
+  {
+    "first_name": "Skipp",
+    "last_name": "MacDermand",
+    "email": "smacdermand3@dmoz.org",
+    "birthday": "1996-10-29T00:00:00",
+    "height": 190,
+    "favorite_food": "Eggroll"
+  },
+  {
+    "first_name": "Giustino",
+    "last_name": "O'Gormally",
+    "email": "gogormally4@unicef.org",
+    "birthday": "1985-12-15T00:00:00",
+    "height": 153,
+    "favorite_food": "Chinese Foods"
+  },
+  {
+    "first_name": "Dan",
+    "last_name": "Bear",
+    "email": "dbear5@sohu.com",
+    "birthday": "1982-01-24T00:00:00",
+    "height": 174,
+    "favorite_food": "Artichokes"
+  },
+  {
+    "first_name": "Harv",
+    "last_name": "Blumire",
+    "email": "hblumire6@bloglines.com",
+    "birthday": "1995-12-10T00:00:00",
+    "height": 157,
+    "favorite_food": "Gelatine Powder"
+  },
+  {
+    "first_name": "Corella",
+    "last_name": "Mattedi",
+    "email": "cmattedi7@dot.gov",
+    "birthday": "1990-06-16T00:00:00",
+    "height": 192,
+    "favorite_food": "Black Currants"
+  },
+  {
+    "first_name": "Maxwell",
+    "last_name": "Pressdee",
+    "email": "mpressdee8@twitter.com",
+    "birthday": "1983-01-24T00:00:00",
+    "height": 187,
+    "favorite_food": "Strawberry Yogurt"
+  },
+  {
+    "first_name": "Angelina",
+    "last_name": "Clowton",
+    "email": "aclowton9@163.com",
+    "birthday": "1977-05-31T00:00:00",
+    "height": 160,
+    "favorite_food": "Chicken"
+  },
+  {
+    "first_name": "Alonso",
+    "last_name": "Taysbil",
+    "email": "ataysbila@chicagotribune.com",
+    "birthday": "1975-01-16T00:00:00",
+    "height": 169,
+    "favorite_food": "Turkey"
+  },
+  {
+    "first_name": "Devlin",
+    "last_name": "Durbann",
+    "email": "ddurbannb@cbslocal.com",
+    "birthday": "1971-05-08T00:00:00",
+    "height": 160,
+    "favorite_food": "Soy Protein"
+  },
+  {
+    "first_name": "Sada",
+    "last_name": "Stockley",
+    "email": "sstockleyc@plala.or.jp",
+    "birthday": "1970-04-21T00:00:00",
+    "height": 185,
+    "favorite_food": "Gingerale"
+  },
+  {
+    "first_name": "Linoel",
+    "last_name": "Snepp",
+    "email": "lsneppd@xinhuanet.com",
+    "birthday": "1981-03-08T00:00:00",
+    "height": 190,
+    "favorite_food": "Squid"
+  },
+  {
+    "first_name": "Torie",
+    "last_name": "Torregiani",
+    "email": "ttorregianie@mozilla.org",
+    "birthday": "1970-10-04T00:00:00",
+    "height": 156,
+    "favorite_food": "Cheddar"
+  },
+  {
+    "first_name": "Skell",
+    "last_name": "Piel",
+    "email": "spielf@vistaprint.com",
+    "birthday": "1994-06-08T00:00:00",
+    "height": 186,
+    "favorite_food": "Pepsi"
+  },
+  {
+    "first_name": "Ewart",
+    "last_name": "Cockney",
+    "email": "ecockneyg@ted.com",
+    "birthday": "1977-09-04T00:00:00",
+    "height": 177,
+    "favorite_food": "Apple"
+  }
+]

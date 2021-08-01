@@ -1,7 +1,7 @@
-import openpyxl
 import pytest
 
-import tests
+# noinspection PyUnresolvedReferences
+from tests import workbook, worksheet, worksheet_empty
 from xcelios import position
 
 
@@ -60,51 +60,100 @@ def test_position_from_abs_err(abs_str):
         position.Position.from_abs_string(abs_str)
 
 
-@pytest.mark.parametrize('marker,pos_str', [
-    (position.MarkerPos('A3'), 'A3'),
-    (position.MarkerName('table_people'), 'B3'),
-    (position.MarkerPattern(position.MarkerName('table_people'), r'^Email$',
-                            position.Direction.RIGHT, 2), 'D3'),
+def test_position_eq():
+    assert position.Position('A1') == position.Position('A1')
+    assert position.Position('A1') != position.Position('A2')
+
+
+@pytest.mark.parametrize('origin,direction,d,target', [
+    ('A1', position.Direction.DOWN, 1, 'A2'),
+    ('C3', position.Direction.UP, 2, 'C1'),
+    ('C3', position.Direction.RIGHT, 4, 'G3'),
+    ('C3', position.Direction.LEFT, 2, 'A3'),
 ])
-def test_marker(marker: position.MarkerAbs, pos_str):
-    wb = openpyxl.open(tests.FILE_TEST1)
-    ws = wb['Sheet1']
-    pos = marker.get_position(ws)
+def test_shifted(origin, direction, d, target):
+    pos = position.Position(origin)
+    shift = pos.shifted(direction, d)
 
-    assert str(pos) == pos_str
-    wb.close()
+    assert str(shift) == target
 
 
-@pytest.mark.parametrize('marker', [
-    position.MarkerName('XYZ'),
-    position.MarkerPattern(position.MarkerName('table_people'), r'^XYZ$',
-                           position.Direction.RIGHT, 2),
+@pytest.mark.parametrize('pos_a,pos_b,direction,distance', [
+    ('A1', 'A10', position.Direction.DOWN, 9),
+    ('A10', 'A1', position.Direction.DOWN, -9),
+    ('A10', 'A1', position.Direction.UP, 9),
+    ('A1', 'F1', position.Direction.RIGHT, 5),
+    ('F1', 'A1', position.Direction.RIGHT, -5),
+    ('F1', 'A1', position.Direction.LEFT, 5),
 ])
-def test_marker_err(marker: position.MarkerAbs):
-    wb = openpyxl.open(tests.FILE_TEST1)
-    ws = wb['Sheet1']
+def test_dir_distance(pos_a, pos_b, direction, distance):
+    pa = position.Position(pos_a)
+    pb = position.Position(pos_b)
 
-    with pytest.raises(position.InvalidPositionError):
-        marker.get_position(ws)
+    dst = pa.dir_distance(pb, direction)
 
-    wb.close()
-
-
-def test_marker_name_wrong_sheet():
-    wb = openpyxl.open(tests.FILE_TEST1)
-    ws = wb['SheetE']
-
-    with pytest.raises(position.InvalidPositionError):
-        position.MarkerName('table_people').get_position(ws)
-
-    wb.close()
+    assert dst == distance
+    assert pa.shifted(direction, dst) == pb
 
 
-def test_marker_get_cell():
-    wb = openpyxl.open(tests.FILE_TEST1)
-    ws = wb['Sheet1']
-    marker = position.MarkerPos('B4')
+@pytest.mark.parametrize('pos_a,pos_b,axis,pos_c', [
+    ('A1', 'Z12', position.Axis.ROW, 'Z1'),
+    ('A1', 'Z12', position.Axis.COL, 'A12'),
+])
+def test_combine(pos_a, pos_b, axis, pos_c):
+    pa = position.Position(pos_a)
+    pb = position.Position(pos_b)
 
-    assert marker.get_cell(ws).value == 'Hanson'
+    comb = pa.combine(axis, pb)
 
-    wb.close()
+    assert str(comb) == pos_c
+
+
+@pytest.mark.parametrize('pos_a,n_b,axis,pos_c', [
+    ('A1', 26, position.Axis.ROW, 'Z1'),
+    ('A1', 12, position.Axis.COL, 'A12'),
+])
+def test_combine_int(pos_a, n_b, axis, pos_c):
+    pa = position.Position(pos_a)
+
+    comb = pa.combine(axis, n_b)
+
+    assert str(comb) == pos_c
+
+
+@pytest.mark.parametrize('sname,pos,is_in', [
+    ('Sheet1', 'A1', False),
+    ('Sheet1', 'B3', True),
+    ('Sheet1', 'B29', False),
+    ('SheetE', 'A1', True),
+    ('SheetE', 'B3', False),
+])
+def test_is_in(workbook, sname, pos, is_in):
+    ws = workbook[sname]
+    pos = position.Position(pos)
+
+    assert pos.is_in(ws) == is_in
+
+
+def test_get_cell(worksheet):
+    pos = position.Position('B4')
+
+    assert pos.get_cell(worksheet).value == 'Hanson'
+
+
+@pytest.mark.parametrize('pos,empty', [
+    ('A1', True),
+    ('B3', False),
+])
+def test_is_cell_empty(worksheet, pos, empty):
+    pos = position.Position(pos)
+
+    assert pos.is_cell_empty(worksheet) == empty
+
+
+@pytest.mark.parametrize('pos,axis,coord', [
+    ('A10', position.Axis.ROW, 10),
+    ('A10', position.Axis.COL, 1),
+])
+def test_get_coord(pos, axis, coord):
+    assert position.Position(pos).get_coord(axis) == coord

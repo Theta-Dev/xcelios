@@ -1,10 +1,11 @@
+import os
 from dataclasses import dataclass
 from datetime import datetime
 
-import openpyxl
 import pytest
 
-import tests
+# noinspection PyUnresolvedReferences
+from tests import DIR_JSON, assert_obj_equals_json_file, workbook, worksheet
 from xcelios import position, table
 
 
@@ -23,7 +24,7 @@ class Prices:
     date: datetime
     product_a: float
     product_b: float
-    sum: float
+    sum: str
 
 
 @dataclass
@@ -36,6 +37,16 @@ class PersonErr:
     favorite_food: str
     lol: str
     wtf: str
+
+
+@dataclass
+class PersonTypeErr:
+    first_name: int
+    last_name: str
+    email: str
+    birthday: datetime
+    height: int
+    favorite_food: str
 
 
 @pytest.mark.parametrize('marker_name,args,header_pos', [
@@ -55,14 +66,10 @@ class PersonErr:
          'sum': position.Position('B28'),
      }),
 ])
-def test_table_headers(marker_name, args, header_pos):
-    wb = openpyxl.open(tests.FILE_TEST1)
-    ws = wb['Sheet1']
-    tb = table.Table(ws, position.MarkerName(marker_name), *args)
+def test_table_headers(worksheet, marker_name, args, header_pos):
+    tb = table.Table(worksheet, position.MarkerName(marker_name), *args)
 
     assert tb.title_positions == header_pos
-
-    wb.close()
 
 
 @pytest.mark.parametrize('marker_name,args,emsg', [
@@ -75,13 +82,22 @@ height, favorite_food'),
         Prices, position.Direction.DOWN, position.Direction.RIGHT, 0
     ], 'Could not find table headers: product_a, product_b, sum'),
 ])
-def test_table_headers_err(marker_name, args, emsg):
-    wb = openpyxl.open(tests.FILE_TEST1)
-    ws = wb['Sheet1']
-
+def test_table_headers_err(worksheet, marker_name, args, emsg):
     with pytest.raises(table.TableParseError) as e:
-        table.Table(ws, position.MarkerName(marker_name), *args)
+        table.Table(worksheet, position.MarkerName(marker_name), *args)
 
     assert str(e.value) == emsg
 
-    wb.close()
+
+@pytest.mark.parametrize('marker_name,args,json_file', [
+    ('table_people', [Person], 'people.json'),
+    ('table_prices', [
+        Prices, position.Direction.DOWN, position.Direction.RIGHT
+    ], 'prices.json'),
+])
+def test_read_datasets(worksheet, marker_name, args, json_file):
+    tab = table.Table(worksheet, position.MarkerName(marker_name), *args)
+    tab.read_datasets()
+
+    assert_obj_equals_json_file(tab.datasets,
+                                os.path.join(DIR_JSON, json_file))
